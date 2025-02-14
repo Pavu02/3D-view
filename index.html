@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps-Like 3D Panorama</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.css" />
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #panorama {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Panorama Container -->
+    <div id="panorama"></div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button class="btn" onclick="toggleFullscreen()">Fullscreen</button>
+        <button class="btn" onclick="increaseZoom()">Zoom In</button>
+        <button class="btn" onclick="decreaseZoom()">Zoom Out</button>
+        <button class="btn" onclick="resetView()">Reset View</button>
+    </div>
+
+    <script>
+        // Responsive zoom settings
+        var minZoom = window.innerWidth < 768 ? 15 : 10; // More zoom for mobile
+        var maxZoom = window.innerWidth < 768 ? 90 : 100; // Adjust max zoom for mobile
+        var startZoom = window.innerWidth < 768 ? 40 : 50; // Different start zoom levels
+
+        var viewer = pannellum.viewer('panorama', {
+            type: "equirectangular",
+            panorama: "image.jpg", // Replace with your panoramic image
+            autoLoad: true,
+            compass: true, // Enable compass for orientation
+            hfov: startZoom, // Responsive start zoom
+            hfovMin: 5, // Allow more zoom-in on mobile
+            hfovMax: maxZoom, // Prevent too much zoom-outs
+            yaw: 0,
+            pitch: -60, // Start from a slight tilt
+            autoRotate: 0, // No auto-rotation
+            mouseZoom: true, // Enable scroll & pinch zoom
+            touchZoom: true, // Enable pinch zoom on mobile
+            draggable: true, // Enable full dragging like Google Maps
+            hotSpots: [
+                { pitch: -60, yaw: 30, type: "info", text: "Plot 1" },
+                { pitch: -60, yaw: 60, type: "info", text: "Plot 2" }
+            ]
+        });
+
+        // Fullscreen toggle
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Zoom In function
+        function increaseZoom() {
+            let currentHfov = viewer.getHfov();
+            if (currentHfov > minZoom) {
+                viewer.setHfov(currentHfov - 5);
+            }
+        }
+
+        // Zoom Out function
+        function decreaseZoom() {
+            let currentHfov = viewer.getHfov();
+            if (currentHfov < maxZoom) {
+                viewer.setHfov(currentHfov + 5);
+            }
+        }
+
+        // Reset view to default
+        function resetView() {
+            viewer.setYaw(0);
+            viewer.setPitch(-60);
+            viewer.setHfov(startZoom);
+        }
+
+        // Update zoom settings if screen size changes
+        window.addEventListener('resize', function () {
+            minZoom = window.innerWidth < 768 ? 15 : 10;
+            maxZoom = window.innerWidth < 768 ? 90 : 100;
+            viewer.setHfov(Math.max(minZoom, Math.min(viewer.getHfov(), maxZoom)));
+        });
+    </script>
+
+</body>
+
+</html>
