@@ -22,9 +22,6 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
         }
 
         .btn {
@@ -50,32 +47,28 @@
     <!-- Panorama Container -->
     <div id="panorama"></div>
 
-    <!-- Controls -->
+    <!-- Fullscreen Button Only -->
     <div class="controls">
         <button class="btn" onclick="toggleFullscreen()">Fullscreen</button>
-        <button class="btn" onclick="increaseZoom()">Zoom In</button>
-        <button class="btn" onclick="decreaseZoom()">Zoom Out</button>
-        <button class="btn" onclick="resetView()">Reset View</button>
     </div>
 
     <script>
         // Detect if the user is on a mobile device
         var isMobile = window.innerWidth < 768;
 
-        // Allow infinite zoom (but set practical limits to avoid distortion)
-        var minZoom = 5;  // More zoom-in capability
-        var maxZoom = 150; // Higher max zoom
-        var startZoom = isMobile ? 50 : 60;  // Default zoom level
+        // Allow infinite zoom
+        var minZoom = 5;
+        var maxZoom = 150;
+        var startZoom = isMobile ? 50 : 60;
 
-        // Apply to Pannellum viewer
         var viewer = pannellum.viewer('panorama', {
             type: "equirectangular",
             panorama: "image.jpg", // Replace with your image
             autoLoad: true,
             compass: true,
-            hfov: startZoom,  // Start zoom level
-            hfovMin: minZoom, // Allow extreme zoom-in
-            hfovMax: maxZoom, // Allow extreme zoom-out
+            hfov: startZoom,
+            hfovMin: minZoom,
+            hfovMax: maxZoom,
             yaw: 0,
             pitch: -60,
             autoRotate: 0,
@@ -83,7 +76,6 @@
             touchZoom: true,
             draggable: true
         });
-
 
         // Fullscreen toggle
         function toggleFullscreen() {
@@ -93,38 +85,6 @@
                 document.exitFullscreen();
             }
         }
-
-        // Zoom In function with strict limits
-        function increaseZoom() {
-            let currentHfov = viewer.getHfov();
-            if (currentHfov > minZoom) {
-                viewer.setHfov(Math.max(currentHfov - 5, minZoom));
-            }
-        }
-
-        // Zoom Out function with strict limits
-        function decreaseZoom() {
-            let currentHfov = viewer.getHfov();
-            if (currentHfov < maxZoom) {
-                viewer.setHfov(Math.min(currentHfov + 5, maxZoom));
-            }
-        }
-
-        // Reset view to default settings
-        function resetView() {
-            viewer.setYaw(0);
-            viewer.setPitch(-30);
-            viewer.setHfov(startZoom);
-        }
-
-        // Update zoom settings dynamically on resize
-        window.addEventListener('resize', function () {
-            isMobile = window.innerWidth < 768;
-            minZoom = isMobile ? 30 : 20;
-            maxZoom = isMobile ? 70 : 80;
-            startZoom = isMobile ? 50 : 60;
-            viewer.setHfov(Math.max(minZoom, Math.min(viewer.getHfov(), maxZoom)));
-        });
     </script>
 
 </body>
