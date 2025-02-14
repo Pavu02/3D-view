@@ -17,28 +17,6 @@
             width: 100vw;
             height: 100vh;
         }
-
-        .controls {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-        }
-
-        .btn {
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
-            transition: 0.3s;
-        }
-
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.9);
-            color: black;
-        }
     </style>
 </head>
 
@@ -47,19 +25,14 @@
     <!-- Panorama Container -->
     <div id="panorama"></div>
 
-    <!-- Fullscreen Button Only -->
-    <div class="controls">
-        <button class="btn" onclick="toggleFullscreen()">Fullscreen</button>
-    </div>
-
     <script>
         // Detect if the user is on a mobile device
         var isMobile = window.innerWidth < 768;
 
-        // Allow infinite zoom
-        var minZoom = 5;
-        var maxZoom = 150;
-        var startZoom = isMobile ? 50 : 60;
+        // Maximum zoom-in settings
+        var minZoom = 5;  // Allow extreme zoom-in
+        var maxZoom = 200; // Higher maximum zoom
+        var startZoom = isMobile ? 70 : 80; // Start at a high zoom level
 
         var viewer = pannellum.viewer('panorama', {
             type: "equirectangular",
@@ -76,15 +49,6 @@
             touchZoom: true,
             draggable: true
         });
-
-        // Fullscreen toggle
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
-        }
     </script>
 
 </body>
