@@ -25,31 +25,33 @@
     <!-- Panorama Container -->
     <div id="panorama"></div>
 
-    <script>
-        // Detect if the user is on a mobile device
-        var isMobile = window.innerWidth < 768;
+<script>
+    // Function to detect mobile devices based on screen width
+    const isMobile = window.innerWidth < 768;
 
-        // Maximum zoom-in settings
-        var minZoom = 5;  // Allow extreme zoom-in
-        var maxZoom = 200; // Higher maximum zoom
-        var startZoom = isMobile ? 70 : 80; // Start at a high zoom level
+    // Adjust zoom values for Pannellum (hfov: smaller = more zoomed in)
+    const minZoom = 30; // Most zoomed-in (smaller value = tighter)
+    const maxZoom = 120; // Most zoomed-out
+    const startZoom = isMobile ? 45 : 60; // Mobile starts slightly zoomed in
 
-        var viewer = pannellum.viewer('panorama', {
-            type: "equirectangular",
-            panorama: "newhd.jpg", // Replace with your image
-            autoLoad: true,
-            compass: true,
-            hfov: startZoom,
-            hfovMin: minZoom,
-            hfovMax: maxZoom,
-            yaw: 0,
-            pitch: -60,
-            autoRotate: 0,
-            mouseZoom: true,
-            touchZoom: true,
-            draggable: true
-        });
-    </script>
+    pannellum.viewer('panorama', {
+        type: "equirectangular",
+        panorama: "newhd.jpg", // Your 360° image
+        autoLoad: true,
+        showControls: true, // Show zoom/rotate controls
+        compass: true,
+        hfov: startZoom,
+        minHfov: minZoom,
+        maxHfov: maxZoom,
+        pitch: -10, // Vertical angle
+        yaw: 0,     // Horizontal angle
+        autoRotate: 0,
+        mouseZoom: true,    // Enable mouse wheel zoom
+        touchZoom: true,    // Enable pinch zoom on mobile
+        draggable: true     // Enable drag to rotate
+    });
+</script>
+
 
 </body>
 
